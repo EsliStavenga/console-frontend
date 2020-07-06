@@ -22,4 +22,5 @@ testing:
         - master
         - develop
         - staging
+        - feature/CI-CD
 
