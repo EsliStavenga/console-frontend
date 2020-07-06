@@ -12,7 +12,7 @@ testing:
     allow_failure: false
     environment: test
     script:
-        - ng test --watch=false --code-coverage --browsers chromium
+        - ng test --watch=false --code-coverage --browsers FirefoxHeadless
     coverage: '/Lines \W+: (\d+\.\d+)%.*/'
     artifacts:
         paths:
