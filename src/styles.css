@@ -1,0 +1,12 @@
+/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: "Source Code Pro";
+  src: url("/assets/fonts/SourceCodePro-Regular.ttf");
+}
+body {
+  background: black;
+  color: white;
+  font-family: "Source Code Pro", sans-serif;
+}
+
+/*# sourceMappingURL=styles.css.map */
