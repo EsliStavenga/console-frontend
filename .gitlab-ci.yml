@@ -7,14 +7,15 @@ before_script:
     - npm install
 
 testing:
-    image: trion/ng-cli-karma
     stage: test
+    image: trion/ng-cli-karma
+    allow_failure: false
     environment: test
     script:
         - ng test --watch=false --code-coverage
+    coverage: '/Lines \W+: (\d+\.\d+)%.*/'
     artifacts:
         paths:
-            - coverage/
             - coverage/
     only:
         - merge_requests
