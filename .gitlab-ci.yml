@@ -12,7 +12,7 @@ testing:
     allow_failure: false
     environment: test
     script:
-        - apt-get update
+        - apt-get -f update
         - apt-get -y install firefox
         - ng test --watch=false --code-coverage
     coverage: '/Lines \W+: (\d+\.\d+)%.*/'
