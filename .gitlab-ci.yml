@@ -16,9 +16,9 @@ building:
         name: frontend
     image: trion/ng-cli-karma
     script:
-        - ng build --prod
         - npm install @angular/cli
         - npm install
+        - ng build --prod
     only:
         - merge_requests
         - master
