@@ -26,7 +26,8 @@ describe('Console', () => {
 		const c = new Console(['']);
 
 		//act
-		expect(() => { c.addText('a') }).toThrow(new InvalidArgumentException(`Character 'a' is not in allowed characters list`));
+		expect(() => { c.addText('a') }).toEqual('asdasd');
+		// expect(() => { c.addText('a') }).toEqual(new InvalidArgumentException(`Character 'a' is not in allowed characters list`));
 
 		//assert
 		expect(c.preCursor).toEqual('');
