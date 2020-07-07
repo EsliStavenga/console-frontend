@@ -11,15 +11,17 @@ before_script:
     - npm install
 
 build:
-    -
+    stage: build
+    allow_failure: false
+    environment: unit_testing
+    image: trion/ng-cli-karma
 
 testing:
     stage: test
-    image: trion/ng-cli-karma
     allow_failure: false
-    environment: test
+    environment: unit_testing
     script:
-        - ng test --watch=false --code-coverage
+        - ng test --watch=false --code-coverage --browsers ChromeHeadless
     coverage: '/Lines\W +: \d+\% \( \d+\/\d+ \).*/'
     artifacts:
         paths:
