@@ -7,6 +7,7 @@ module.exports = function (config) {
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
+      require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
@@ -25,7 +26,20 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Firefox'],
+    customLaunchers: {
+      'ChromeHeadless': {
+        base: 'Chrome',
+        flags: [
+          '--headless',
+          '--no-sandbox',
+          '--disable-gpu',
+          // Without a remote debugging port, Google Chrome exits immediately.
+          '--remote-debugging-port=9222'
+        ],
+        debug: true
+      }
+    },
+    browsers: ['ChromeHeadless'],
     singleRun: false,
     restartOnFileChange: true
   });

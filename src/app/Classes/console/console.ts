@@ -52,6 +52,11 @@ export class Console {
 		}
 	}
 
+	/**
+	 *
+	 * @param s One or multiple characters to be added to the console input field
+	 * @throws InvalidArgumentException When a character is not in the allowed characters list
+	 */
 	public addText(s: string) {
 		if (!this.characterWhitelist.includes(s)) {
 			throw new InvalidArgumentException(`Character '${s}' is not in allowed characters list`)
