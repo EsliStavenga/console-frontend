@@ -13,7 +13,7 @@ testing:
     environment: test
     script:
         - ng test --watch=false --code-coverage
-    coverage: '/Lines \W+: (\d+\.\d+)%.*/'
+    coverage: '/Lines\W +: \d+\% \( \d+\/\d+ \).*/'
     artifacts:
         paths:
             - coverage/
