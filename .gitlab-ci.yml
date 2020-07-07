@@ -2,9 +2,16 @@ cache:
     paths:
         - node_modules/
 
+stages:
+    - build
+    - test
+
 before_script:
     - npm install @angular/cli
     - npm install
+
+build:
+    -
 
 testing:
     stage: test
