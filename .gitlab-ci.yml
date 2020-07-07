@@ -1,6 +1,6 @@
 cache:
     untracked: true
-    key: "$CI_BUILD_REF_NAME"
+    key: "$CI_COMMIT_SHA"
     paths:
         - node_modules/
 
