@@ -5,21 +5,30 @@ cache:
 stages:
     - build
     - test
+    - deploy
 
-before_script:
-    - npm install @angular/cli
-    - npm install
-
-build:
+building:
     stage: build
     allow_failure: false
-    environment: unit_testing
+    environment:
+        name: frontend
     image: trion/ng-cli-karma
+    script:
+        - ng build --prod
+        - npm install @angular/cli
+        - npm install
+    only:
+        - merge_requests
+        - master
+        - develop
+        - staging
+        - feature/CI-CD
 
 testing:
     stage: test
     allow_failure: false
-    environment: unit_testing
+    environment:
+        name: frontend
     script:
         - ng test --watch=false --code-coverage --browsers ChromeHeadless
     coverage: '/Lines\W +: \d+\% \( \d+\/\d+ \).*/'
@@ -32,4 +41,14 @@ testing:
         - develop
         - staging
         - feature/CI-CD
+
+deploy_staging:
+    stage: deploy
+    environment:
+        name: frontend
+    script:
+        - cd /data/httpd/eslistavenga/pre-prod.eslistavenga.nl/
+        - touch waaaaaa.html
+    only:
+        - staging
 
