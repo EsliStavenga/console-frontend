@@ -14,6 +14,9 @@ building:
     allow_failure: false
     environment:
         name: frontend
+    artifacts:
+        paths:
+            - node_modules/
     image: trion/ng-cli-karma
     script:
         - npm install @angular/cli
