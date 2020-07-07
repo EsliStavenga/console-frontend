@@ -3,9 +3,11 @@ cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
         - node_modules/
+        - dist/
 
 stages:
     - build
+    - setup
     - test
     - deploy
 
@@ -17,10 +19,28 @@ building:
     artifacts:
         paths:
             - node_modules/
-    image: trion/ng-cli-karma
+            - dist/
     script:
-        - npm install @angular/cli
-        - npm install
+        - echo "Build completed" #idk man it needs a script entry
+    image: trion/ng-cli-karma
+    only:
+        - merge_requests
+        - master
+        - develop
+        - staging
+        - feature/CI-CD
+
+setting_up:
+    stage: setup
+    allow_failure: false
+    environment:
+        name: frontend
+    artifacts:
+        paths:
+            - node_modules/
+            - dist/
+    script:
+        - npm install --only=dev
         - ng build --prod
     only:
         - merge_requests
