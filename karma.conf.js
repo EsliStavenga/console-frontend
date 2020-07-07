@@ -27,6 +27,17 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     customLaunchers: {
+      'FirefoxHeadless': {
+        base: 'Firefox',
+        flags: [
+          '--headless',
+          '--no-sandbox',
+          '--disable-gpu',
+          // Without a remote debugging port, Google Chrome exits immediately.
+          '--remote-debugging-port=9222'
+        ],
+        debug: true
+      },
       'ChromeHeadless': {
         base: 'Chrome',
         flags: [
