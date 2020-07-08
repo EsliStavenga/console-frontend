@@ -9,9 +9,6 @@ stages:
     - test
     - deploy
 
-before_script:
-    - npm install @angular/cli
-    - npm install
 
 testing:
     stage: test
@@ -19,6 +16,9 @@ testing:
     allow_failure: false
     environment:
         name: Frontend
+    before_script:
+        - npm install @angular/cli
+        - npm install
     script:
         - ng test --watch=false --code-coverage
     coverage: '/Lines\W +: \d+\% \( \d+\/\d+ \).*/'
