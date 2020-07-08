@@ -30,7 +30,7 @@ testing:
         - master
         - develop
         - staging
-        - feature/CI-CD
+#        - feature/CI-CD
 
 deploy_staging:
     stage: deploy
