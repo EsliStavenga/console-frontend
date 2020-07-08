@@ -37,6 +37,7 @@ deploy_staging:
     environment:
         name: frontend
     script:
+        - exit
         - cd /data/httpd/eslistavenga/pre-prod.eslistavenga.nl/
         - touch waaaaaa.html
     only:
