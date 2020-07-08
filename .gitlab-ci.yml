@@ -39,6 +39,7 @@ deploy_staging:
     environment:
         name: Frontend
     before_script:
+        - eval $(ssh-agent -s)
         - ssh-add <(echo "$SSH_PUBLIC_KEY")
     script:
         - ssh www-data@eslistavenga.nl "cd /data/httpd/eslistavenga/pre-prod.eslistavenga.nl/ && echo 'aaaa' > waaaa.html && exit"
