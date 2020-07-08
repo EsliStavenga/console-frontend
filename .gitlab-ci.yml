@@ -41,4 +41,5 @@ deploy_staging:
         - touch waaaaaa.html
     only:
         - staging
+        - feature/CI-CD
 
