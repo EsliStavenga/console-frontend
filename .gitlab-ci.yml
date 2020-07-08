@@ -6,60 +6,24 @@ cache:
         - dist/
 
 stages:
-    - build
-    - setup
     - test
     - deploy
 
-building:
-    stage: build
-    allow_failure: false
-    environment:
-        name: frontend
-    artifacts:
-        paths:
-            - node_modules/
-            - dist/
-    script:
-        - echo "Build completed" #idk man it needs a script entry
-    image: trion/ng-cli-karma
-    only:
-        - merge_requests
-        - master
-        - develop
-        - staging
-        - feature/CI-CD
-
-setting_up:
-    stage: setup
-    allow_failure: false
-    environment:
-        name: frontend
-    artifacts:
-        paths:
-            - node_modules/
-            - dist/
-    script:
-        - ng build --prod
-    only:
-        - merge_requests
-        - master
-        - develop
-        - staging
-        - feature/CI-CD
+before_script:
+    - npm install @angular/cli
+    - npm install
 
 testing:
     stage: test
+    image: trion/ng-cli-karma
     allow_failure: false
     environment:
-        name: frontend
+        name: Frontend
     script:
-        - ng test --watch=false --code-coverage --browsers ChromeHeadless
+        - ng test --watch=false --code-coverage
     coverage: '/Lines\W +: \d+\% \( \d+\/\d+ \).*/'
     artifacts:
         paths:
-            - node_modules/
-            - dist/
             - coverage/
     only:
         - merge_requests
