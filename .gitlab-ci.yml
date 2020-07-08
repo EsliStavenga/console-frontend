@@ -5,6 +5,9 @@ cache:
         - node_modules/
         - dist/
 
+variables:
+    REMOTE_PATH: "/data/httpd/eslistavenga/pre-prod.eslistavenga.nl/releases"
+
 stages:
     - test
     - deploy
@@ -34,17 +37,36 @@ testing:
 
 deploy_staging:
     stage: deploy
-    image: kroniak/ssh-client
+    image: trion/ng-cli
     allow_failure: false
     environment:
         name: Frontend
     before_script:
+        - 'which ssh-agent || ( apt-get install -qq openssh-client )' #get agent or install ssh client if doesn't exist
         - eval $(ssh-agent -s)
-        - ssh-add <(echo "$SSH_PRIVATE_KEY")
+        - ssh-add <(echo "$SSH_PRIVATE_KEY") #set private key from CI/CD env variable
         - mkdir -p ~/.ssh/
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        - mkdir -p /release
     script:
-        - ssh www-data@eslistavenga.nl "cd /data/httpd/eslistavenga/pre-prod.eslistavenga.nl/ && echo 'aaaa' > waaaa.html && exit"
+        - cd /release
+        - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/eslistavenga.nl/console/frontend.git .
+        - npm install @angular/cli
+        - npm install
+        - ng build --prod
+        - scp -r ./dist www-data@eslistavenga.nl:${REMOTE_PATH}/new/
+        - ssh www-data@eslistavenga.nl
+        - cd ${REMOTE_PATH}
+        - mv -Rf ./current ./old
+        - mv -Rf ./new ./current
+        #build
+        #upload recursively with scp to new release folder
+        #connect with ssh
+        #move current release to old folder
+        #move new release to current release folder
+        #delete old release
+        #cleanup
+        #- ssh www-data@eslistavenga.nl cd /data/httpd/eslistavenga/pre-prod.eslistavenga.nl/ && echo 'aaaa' > waaaa.html && exit"
     only:
         - staging
         - feature/CI-CD
