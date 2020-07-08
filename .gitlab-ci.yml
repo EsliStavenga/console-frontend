@@ -1,6 +1,6 @@
 cache:
     untracked: true
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_SHA}
     paths:
         - node_modules/
         - dist/
@@ -59,6 +59,8 @@ testing:
     coverage: '/Lines\W +: \d+\% \( \d+\/\d+ \).*/'
     artifacts:
         paths:
+            - node_modules/
+            - dist/
             - coverage/
     only:
         - merge_requests
