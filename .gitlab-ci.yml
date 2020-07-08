@@ -34,11 +34,16 @@ testing:
 
 deploy_staging:
     stage: deploy
+    image: kroniak/ssh-client
+    allow_failure: false
     environment:
-        name: frontend
-    script:
+        name: Frontend
+    before_script:
         - echo "$SSH_PUBLIC_KEY" > ~/id_rsa.pub
+    script:
         - ssh -i ~/id_rsa.pub www-data@eslistavenga.nl "cd /data/httpd/eslistavenga/pre-prod.eslistavenga.nl/ && echo 'aaaa' > waaaa.html"
+    after_script:
+        - exit
     only:
         - staging
         - feature/CI-CD
