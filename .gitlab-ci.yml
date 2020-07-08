@@ -37,9 +37,8 @@ deploy_staging:
     environment:
         name: frontend
     script:
-        - exit
-        - cd /data/httpd/eslistavenga/pre-prod.eslistavenga.nl/
-        - touch waaaaaa.html
+        - echo "$SSH_PUBLIC_KEY" > ~/id_rsa.pub
+        - ssh -i ~/id_rsa.pub www-data@eslistavenga.nl "cd /data/httpd/eslistavenga/pre-prod.eslistavenga.nl/ && echo 'aaaa' > waaaa.html"
     only:
         - staging
         - feature/CI-CD
