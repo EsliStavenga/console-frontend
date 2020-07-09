@@ -46,6 +46,7 @@ deploy_staging:
         - eval $(ssh-agent -s)
         - ssh-add <(echo "$SSH_PRIVATE_KEY") #set private key from CI/CD env variable
         - mkdir -p ~/.ssh/
+        - ssh-keyscan -t rsa gitlab.eslistavenga.nl >> ~/.ssh/known_hosts
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
         - mkdir -p ./release
     script:
