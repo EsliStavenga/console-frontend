@@ -47,9 +47,9 @@ deploy_staging:
         - ssh-add <(echo "$SSH_PRIVATE_KEY") #set private key from CI/CD env variable
         - mkdir -p ~/.ssh/
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-        - mkdir -p /release
+        - mkdir -p ./release
     script:
-        - cd /release
+        - cd ./release
         - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/eslistavenga.nl/console/frontend.git .
         - npm install @angular/cli
         - npm install
