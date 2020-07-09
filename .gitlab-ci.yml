@@ -55,8 +55,8 @@ deploy_staging:
         - npm install @angular/cli
         - npm install
         - ng build --prod
-#        - scp -r ./dist www-data@eslistavenga.nl:${REMOTE_PATH}/new/
-        - ssh www-data@eslistavenga.nl
+        - scp -T -r ./dist www-data@eslistavenga.nl:${REMOTE_PATH}/new/
+        - ssh -t www-data@eslistavenga.nl
         - cd ${REMOTE_PATH}
         - mv -Rf ./current ./old
         - mv -Rf ./new ./current
