@@ -22,7 +22,7 @@ module.exports = function (config) {
             reports: ['html', 'lcovonly', 'text-summary'],
             fixWebpackSourcePaths: true
         },
-        reporters: ['progress', 'kjhtml', 'threshold'],
+        reporters: ['progress', 'kjhtml', 'threshold', 'coverage'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
@@ -51,7 +51,7 @@ module.exports = function (config) {
                 debug: true
             }
         },
-        browsers: ['ChromeHeadless'],
+        browsers: ['FirefoxHeadless'],
         thresholdReporter: {
             statements: 90,
             branches: 0,

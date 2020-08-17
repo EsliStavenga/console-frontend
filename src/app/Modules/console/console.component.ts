@@ -104,7 +104,7 @@ export class ConsoleComponent implements OnInit {
 	}
 
 	private onEnterPress(): void {
-		console.log(this.console.preCursor + this.console.cursor + this.console.postCursor);
+		this.console.execute();
 	}
 
 }

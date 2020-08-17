@@ -1,7 +1,7 @@
-import { InvalidArgumentException } from './invalid-argument-exception';
+import {InvalidArgumentException} from './invalid-argument-exception';
 
 describe('InvalidArgumentException', () => {
-  it('should create an instance', () => {
-    expect(new InvalidArgumentException()).toBeTruthy();
-  });
+	it('should create an instance', () => {
+		expect(new InvalidArgumentException()).toBeTruthy();
+	});
 });

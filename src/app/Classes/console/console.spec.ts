@@ -26,7 +26,9 @@ describe('Console', () => {
 		const c = new Console(['']);
 
 		//act
-		expect(() => { c.addText('a') }).toThrow(new InvalidArgumentException(`Character 'a' is not in allowed characters list`));
+		expect(() => {
+			c.addText('a')
+		}).toThrow(new InvalidArgumentException(`Character 'a' is not in allowed characters list`));
 
 		//assert
 		expect(c.preCursor).toEqual('');
@@ -37,8 +39,8 @@ describe('Console', () => {
 	it('should move the cursor one character to the left', () => {
 		//arrange
 		const c = new Console(['a']);
-		for(let i = 0; i < 5; i++) {
-			c.addText('a')
+		for (let i = 0; i < 5; i++) {
+			c.addText('a');
 		}
 
 		//act
@@ -53,7 +55,7 @@ describe('Console', () => {
 	it('shouldn\'t move the cursor when going left and the cursor is already at home', () => {
 		//arrange
 		const c = new Console(['a']);
-		for(let i = 0; i < 5; i++) {
+		for (let i = 0; i < 5; i++) {
 			c.addText('a')
 		}
 
@@ -70,7 +72,7 @@ describe('Console', () => {
 	it('should move the cursor one character to the right', () => {
 		//arrange
 		const c = new Console(['a']);
-		for(let i = 0; i < 5; i++) {
+		for (let i = 0; i < 5; i++) {
 			c.addText('a')
 		}
 
@@ -100,7 +102,7 @@ describe('Console', () => {
 	it('should move the cursor to the start of the input', () => {
 		//arrange
 		const c = new Console(['a']);
-		for(let i = 0; i < 5; i++) {
+		for (let i = 0; i < 5; i++) {
 			c.addText('a')
 		}
 
@@ -117,7 +119,7 @@ describe('Console', () => {
 	it('should move the cursor to the end of the input', () => {
 		//arrange
 		const c = new Console(['a']);
-		for(let i = 0; i < 5; i++) {
+		for (let i = 0; i < 5; i++) {
 			c.addText('a')
 		}
 

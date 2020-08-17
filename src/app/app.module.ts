@@ -5,6 +5,8 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './Modules/navbar/navbar.component';
 import { ConsoleComponent } from './Modules/console/console.component';
+import { GraphQLModule } from './graphql.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
 	declarations: [
@@ -14,7 +16,9 @@ import { ConsoleComponent } from './Modules/console/console.component';
 	],
 	imports: [
 		BrowserModule,
-		AppRoutingModule
+		AppRoutingModule,
+		GraphQLModule,
+		HttpClientModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]

@@ -1,6 +1,9 @@
-import {StringService} from "../../Services/string.service";
+/* tslint:disable:quotemark */
+import {StringService} from '../../Services/string.service';
 import {Observable, Subscriber} from "rxjs";
 import {InvalidArgumentException} from "../../Exceptions/invalid-argument-exception";
+import {ExecuteCommandQuery} from "../../Queries/ExecuteCommandQuery";
+import {Apollo} from "apollo-angular";
 
 export class Console {
 
@@ -11,33 +14,35 @@ export class Console {
 	private _cursor = this.WHITESPACE; //The text underneath the user's cursor
 	private _postCursor = ''; //after the white flashy bit
 
-	constructor(allowedCharacters: string[]) {
+	constructor(
+		allowedCharacters: string[]
+		) {
 		this.characterWhitelist = allowedCharacters;
 	}
 
 	/* Getters and setters have to agree on visibility so this is to work around that problem */
-	public get preCursor() {
+	public get preCursor(): string {
 		return this._preCursor;
 	}
 
-	public get cursor() {
+	public get cursor(): string {
 		return this._cursor;
 	}
 
-	public get postCursor() {
+	public get postCursor(): string {
 		return this._postCursor;
 	}
 
 	public home(): void {
 		//TODO test this
-		while(this.preCursor) {
+		while (this.preCursor) {
 			this.moveCursorLeft();
 		}
 	}
 
 	public end(): void {
 		//TODO test this
-		while(this.postCursor) {
+		while (this.postCursor) {
 			this.moveCursorRight();
 		}
 	}
@@ -47,7 +52,7 @@ export class Console {
 	}
 
 	public delete(): void {
-		if(this.moveCursorRight()) {
+		if (this.moveCursorRight()) {
 			this.movePreCursorLeft();
 		}
 	}
@@ -72,7 +77,7 @@ export class Console {
 	public moveCursorLeft(): boolean {
 		const lastPreCursorChar = StringService.getLastCharacterFromString(this._preCursor);
 
-		if(lastPreCursorChar) {
+		if (lastPreCursorChar) {
 			this.movePreCursorLeft();
 			this.movePostCursorLeft();
 			this.changeCursorText(lastPreCursorChar);
@@ -82,11 +87,15 @@ export class Console {
 		return !!(lastPreCursorChar);
 	}
 
+	/**
+	 *
+	 * @returns boolean Returns whether or not the cursor was moved one position
+	 */
 	public moveCursorRight(): boolean {
 		//get the first character after the cursor OR whitespace if it's empty (e.g. cursor behind text)
 		const firstPostCursorChar = StringService.getFirstCharacterFromStringOrDefault(this._postCursor, this.WHITESPACE);
 
-		if(firstPostCursorChar) {
+		if (firstPostCursorChar) {
 			this.movePreCursorRight();
 			this.movePostCursorRight();
 			this.changeCursorText(firstPostCursorChar);
@@ -115,7 +124,7 @@ export class Console {
 
 	private changeCursorText(newCharacter: string): void {
 		//this will ensure the cursor has some width, normal spaces are 0 width characters
-		if(newCharacter === ' ') {
+		if (newCharacter === ' ') {
 			newCharacter = this.WHITESPACE;
 		}
 
@@ -138,5 +147,14 @@ export class Console {
 
 	private movePostCursorRight(): void {
 		this._postCursor = StringService.removeFirstCharacterFromString(this._postCursor);
+	}
+
+	public execute(): boolean {
+		const command = (this.preCursor + this.cursor + this.postCursor);
+
+
+
+
+		return true;
 	}
 }
