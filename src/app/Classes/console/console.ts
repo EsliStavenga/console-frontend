@@ -3,9 +3,11 @@ import {StringService} from '../../Services/string.service';
 import {Observable, Subscriber} from "rxjs";
 import {InvalidArgumentException} from "../../Exceptions/invalid-argument-exception";
 import {ExecuteCommandQuery} from "../../Queries/ExecuteCommandQuery";
-import {Apollo} from "apollo-angular";
+import {AppInjector} from '../../app.module';
 
 export class Console {
+
+	private executeCommandQuery: ExecuteCommandQuery
 
 	private readonly WHITESPACE = '\u00A0';
 	private readonly characterWhitelist: string[];
@@ -15,9 +17,10 @@ export class Console {
 	private _postCursor = ''; //after the white flashy bit
 
 	constructor(
-		allowedCharacters: string[]
-		) {
+		allowedCharacters: string[] = []
+	) {
 		this.characterWhitelist = allowedCharacters;
+		this.executeCommandQuery = AppInjector.get(ExecuteCommandQuery);
 	}
 
 	/* Getters and setters have to agree on visibility so this is to work around that problem */

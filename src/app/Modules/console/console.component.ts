@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ClassListService} from "../../Services/class-list.service";
 import {HostListener} from '@angular/core';
 import {Console} from "../../Classes/console/console";
+import {ExecuteCommandQuery} from "../../Queries/ExecuteCommandQuery";
 
 @Component({
 	selector: 'app-console',

@@ -1,6 +1,7 @@
 import {gql} from '@apollo/client';
 import {Subscription} from 'rxjs';
 import {Apollo} from 'apollo-angular';
+import {Injectable} from "@angular/core";
 
 const executeCommandQuery = gql`
 	query execute_command($command: String!) {
@@ -16,6 +17,9 @@ const executeCommandQuery = gql`
     }
 `;
 
+@Injectable({
+	providedIn: 'root'
+})
 export class ExecuteCommandQuery {
 	currentUser: any;
 	private querySubscription: Subscription;
