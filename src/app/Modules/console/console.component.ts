@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ClassListService} from "../../Services/class-list.service";
+import {ClassListService} from '../../Services/class-list.service';
 import {HostListener} from '@angular/core';
-import {Console} from "../../Classes/console/console";
-import {ExecuteCommandQuery} from "../../Queries/ExecuteCommandQuery";
+import {Console} from '../../Classes/console/console';
+import {ExecuteCommandQuery} from '../../Queries/ExecuteCommandQuery';
 
 @Component({
 	selector: 'app-console',
@@ -31,38 +31,38 @@ export class ConsoleComponent implements OnInit {
 
 	ngAfterViewInit(): void {
 		setInterval(() => {
-			ClassListService.toggleClass(this.cursorElement.nativeElement, 'active')
+			ClassListService.toggleClass(this.cursorElement.nativeElement, 'active');
 		}, 500);
 	}
 
 	@HostListener('document:keydown', ['$event'])
 	handleKeyboardEvent(event: KeyboardEvent) {
 		switch (event.key) {
-			case "Backspace":
+			case 'Backspace':
 				this.onBackspacePress();
 				break;
 
-			case "Delete":
+			case 'Delete':
 				this.onDeletePress();
 				break;
 
-			case "ArrowLeft":
+			case 'ArrowLeft':
 				this.onLeftPress();
 				break;
 
-			case "ArrowRight":
+			case 'ArrowRight':
 				this.onRightPress();
 				break;
 
-			case "Enter":
+			case 'Enter':
 				this.onEnterPress();
 				break;
 
-			case "Home":
+			case 'Home':
 				this.onHomePress();
 				break;
 
-			case "End":
+			case 'End':
 				this.onEndPress();
 				break;
 

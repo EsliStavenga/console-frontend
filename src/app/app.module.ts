@@ -5,9 +5,8 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './Modules/navbar/navbar.component';
 import { ConsoleComponent } from './Modules/console/console.component';
-import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
-
+import { GraphQLModule } from './graphql.module';
 export let AppInjector: Injector;
 
 @NgModule({
@@ -19,8 +18,8 @@ export let AppInjector: Injector;
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
-		GraphQLModule,
-		HttpClientModule
+		HttpClientModule,
+		GraphQLModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]

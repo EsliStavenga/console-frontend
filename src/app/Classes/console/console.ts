@@ -155,7 +155,7 @@ export class Console {
 	public execute(): boolean {
 		const command = (this.preCursor + this.cursor + this.postCursor);
 
-
+		this.executeCommandQuery.execute(command);
 
 
 		return true;
