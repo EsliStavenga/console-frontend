@@ -1,15 +1,20 @@
 <div>
 	<div class="terminal container-fluid">
 		<div class="response container-fluid">
-			<div class="row">
-				<div class="col-2">
-					help
-				</div>
-				<div class="col-4">
-					Display this help message
+			<div class="row" *ngFor="let response of console.responses">
+				<div class="col-12">{{response.title}}</div>
+				<div class="col-12" *ngIf="response.responseLines" >
+					<div class="container-fluid parts">
+						<div class="row"*ngFor="let line of response.responseLines">
+							<div class="col-{{response.getColWidth()}}"></div>
+							<div class="col-{{part.getColWidth()}}" *ngFor="let part of line.parts" style="{{'color: #' + part.foregroundColor}}">{{part.content}}</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+
+		<div class="loading" [class.active]="console.loadingText.length > 0">Loading {{console.loadingText}}</div>
 	</div>
 
 	<div class="input">

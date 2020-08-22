@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {MathService} from './math.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -40,5 +41,9 @@ export class StringService {
 	public static globalStringReplace(needle: string, replace: string, haystack: string): string {
 		const regex = new RegExp(needle, "g");
 		return haystack.replace(regex, replace);
+	}
+
+	public static getColWidth(s: string): number {
+		return Math.floor(MathService.clamp(s.length / 16, 1, 12));
 	}
 }

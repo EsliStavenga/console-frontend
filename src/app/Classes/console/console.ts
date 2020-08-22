@@ -1,12 +1,17 @@
-/* tslint:disable:quotemark */
 import {StringService} from '../../Services/string.service';
 import {Observable, Subscriber} from "rxjs";
-import {InvalidArgumentException} from "../../Exceptions/invalid-argument-exception";
-import {ExecuteCommandQuery} from "../../Queries/ExecuteCommandQuery";
+import {InvalidArgumentException} from '../../Exceptions/invalid-argument-exception';
+import {ExecuteCommandQuery} from '../../Queries/ExecuteCommandQuery';
+import {Response} from '../../Entities/Response';
 import {AppInjector} from '../../app.module';
+import Timeout = NodeJS.Timeout;
 
 export class Console {
 
+	public responses: Response[] = [];
+	public loadingText: string = '';
+
+	private loadingTextTimer: NodeJS.Timeout = null;
 	private executeCommandQuery: ExecuteCommandQuery
 
 	private readonly WHITESPACE = '\u00A0';
@@ -21,6 +26,7 @@ export class Console {
 	) {
 		this.characterWhitelist = allowedCharacters;
 		this.executeCommandQuery = AppInjector.get(ExecuteCommandQuery);
+		this.clear();
 	}
 
 	/* Getters and setters have to agree on visibility so this is to work around that problem */
@@ -152,12 +158,43 @@ export class Console {
 		this._postCursor = StringService.removeFirstCharacterFromString(this._postCursor);
 	}
 
-	public execute(): boolean {
-		const command = (this.preCursor + this.cursor + this.postCursor);
+	public execute(): void {
+		const command = (this.preCursor + this.cursor + this.postCursor).trim();
 
-		this.executeCommandQuery.execute(command);
+		if(!command) {
+			return;
+		}
 
+		this.clear();
+		this.startLoadingText();
 
-		return true;
+		this.executeCommandQuery.execute(command).then((response) => {
+			this.responses.push(response);
+			this.clearLoadingText();
+		});
+
+	}
+
+	private clear() {
+		this._preCursor = '';
+		this._cursor = this.WHITESPACE;
+		this._postCursor = '';
+
+		this.clearLoadingText();
+	}
+
+	private clearLoadingText() {
+		clearInterval(this.loadingTextTimer);
+		this.loadingText = '';
+	}
+
+	private startLoadingText() {
+		this.loadingTextTimer = setInterval(() => {
+			if(this.loadingText.length === 10) {
+				this.loadingText = '';
+			}
+
+			this.loadingText += '.';
+		}, 1000);
 	}
 }

@@ -1,44 +1,32 @@
-import {Subscription} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {Apollo, gql} from 'apollo-angular';
+import {gql} from 'apollo-angular';
+import {BaseQuery} from './BaseQuery';
+import {Response} from '../Entities/Response';
+import {IQuery} from './IQuery';
 
 
 @Injectable({
 	providedIn: 'root'
 })
-export class ExecuteCommandQuery {
-	currentUser: any;
-	private querySubscription: Subscription;
+export class ExecuteCommandQuery extends BaseQuery implements IQuery {
 
-	private readonly executeCommandQuery = gql`
-	query execute_command($command: String!) {
-		execute_command(command: $command) {
-			title
-			responseLines {
-				parts {
-					foregroundColor
-					content
+	public query = gql`
+		query execute_command($command: String!) {
+			execute_command(command: $command) {
+				title
+				responseLines {
+					parts {
+						foregroundColor
+						content
+					}
 				}
 			}
 		}
-    }
-`;
+	`;
 
-	public constructor(
-		private apollo: Apollo
-	) {
-	}
-
-	public execute(commandToExecute: string): void {
-		this.querySubscription = this.apollo
-			.watchQuery({
-				query: this.executeCommandQuery,
-				variables: {
-					command: commandToExecute
-				},
-			})
-			.valueChanges.subscribe(({data}) => {
-				debugger;
-			});
+	public execute(commandToExecute: string): Promise<Response> {
+		return this.sendRequest({
+			command: commandToExecute
+		});
 	}
 }
