@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ClassListService} from "../../Services/class-list.service";
+import {ClassListService} from '../../Services/class-list.service';
 import {HostListener} from '@angular/core';
-import {Console} from "../../Classes/console/console";
+import {Console} from '../../Classes/console/console';
 
 @Component({
 	selector: 'app-console',
@@ -30,44 +30,55 @@ export class ConsoleComponent implements OnInit {
 
 	ngAfterViewInit(): void {
 		setInterval(() => {
-			ClassListService.toggleClass(this.cursorElement.nativeElement, 'active')
+			ClassListService.toggleClass(this.cursorElement.nativeElement, 'active');
 		}, 500);
 	}
 
 	@HostListener('document:keydown', ['$event'])
 	handleKeyboardEvent(event: KeyboardEvent) {
 		switch (event.key) {
-			case "Backspace":
+			case 'ArrowUp':
+				this.console.goBackInHistoryByOne();
+				break;
+
+			case 'ArrowDown':
+				this.console.goForwardInHistoryByOne();
+				break;
+
+			case 'Backspace':
 				this.onBackspacePress();
 				break;
 
-			case "Delete":
+			case 'Delete':
 				this.onDeletePress();
 				break;
 
-			case "ArrowLeft":
+			case 'ArrowLeft':
 				this.onLeftPress();
 				break;
 
-			case "ArrowRight":
+			case 'ArrowRight':
 				this.onRightPress();
 				break;
 
-			case "Enter":
+			case 'Enter':
 				this.onEnterPress();
 				break;
 
-			case "Home":
+			case 'Home':
 				this.onHomePress();
 				break;
 
-			case "End":
+			case 'End':
 				this.onEndPress();
 				break;
 
+			case 'F5':
+				return;
+
 			default:
 				this.onTextEntered(event.key);
-				//return instead of break so event.preventDefault will be fired
+				//return instead of break so event.preventDefault won't be fired
 				return;
 		}
 
@@ -104,7 +115,7 @@ export class ConsoleComponent implements OnInit {
 	}
 
 	private onEnterPress(): void {
-		console.log(this.console.preCursor + this.console.cursor + this.console.postCursor);
+		this.console.execute();
 	}
 
 }

@@ -1,10 +1,37 @@
 .row {
 	.parts {
-		display: inline-block;
+
+		.row {
+			padding-top: 5px;
+		}
+
+		@for $i from 1 through 12 {
+			.col-* {
+				text-align: left;
+			}
+		}
+
+		.offset {
+			width: 3%;
+		}
 	}
 }
 
 .input {
+	#error {
+		color: #b31919;
+		vertical-align: top;
+		padding-right: 5px;
+
+		&:not(.active) {
+			display: none;
+		}
+
+		&.active {
+			display: inline-block;
+		}
+	}
+
 	#user {
 		color: #C601FF;
 	}
@@ -26,4 +53,12 @@
 		background: transparent;
 		color: white;
 	}
+}
+
+.active {
+	display: block;
+}
+
+.loading {
+	display: none;
 }
