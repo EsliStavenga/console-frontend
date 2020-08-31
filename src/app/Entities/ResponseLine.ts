@@ -4,7 +4,7 @@ export class ResponseLine {
 
 	public parts: Part[] = [];
 
-	public constructor(data: any) {
+	public constructor(data: { parts: any[] }) {
 		data.parts.forEach(part => {
 			this.parts.push(
 				new Part(part)

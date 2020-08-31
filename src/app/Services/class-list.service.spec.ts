@@ -26,7 +26,7 @@ describe('ClassListService', () => {
         expect(elem.classList).toContain(className);
     });
 
-    it('should continue when add a class that\'s in the classlist', () => {
+    it('should continue when adding a class that\'s in the classList', () => {
         //arrange
         const elem = document.createElement('div');
         const className = 'active';

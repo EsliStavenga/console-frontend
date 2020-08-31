@@ -4,7 +4,7 @@ import {MathService} from './math.service';
 @Injectable({
 	providedIn: 'root'
 })
-export class StringService {
+export abstract class StringService {
 
 	public static removeFirstCharacterFromString(s: string): string {
 		return this.removeFromStartOfString(s, 1);
@@ -31,11 +31,13 @@ export class StringService {
 	}
 
 	public static getFirstCharacterFromStringOrDefault(s: string, _default: string = null): string | null {
-		return this.getFirstCharacterFromString(s) ?? _default;
+		const r =  this.getFirstCharacterFromString(s);
+		return r ? r : _default;
 	}
 
 	public static getLastCharacterFromStringOrDefault(s: string, _default: string = null): string | null {
-		return this.getLastCharacterFromString(s) ?? _default;
+		const r =  this.getLastCharacterFromString(s);
+		return r ? r : _default;
 	}
 
 	public static globalStringReplace(needle: string, replace: string, haystack: string): string {
@@ -43,7 +45,15 @@ export class StringService {
 		return haystack.replace(regex, replace);
 	}
 
-	public static getColWidth(s: string): number {
-		return Math.floor(MathService.clamp(s.length / 16, 1, 12));
+	public static getColWidth(s: string, multiplier: number = 1): number {
+		return Math.floor(MathService.clamp(s.length * multiplier / 16, 1, 12));
+	}
+
+	public static leftTrim(s: string, charToRemove: string): string {
+		return s.replace(new RegExp(`^${charToRemove}+`, 'i'), '');
+	}
+
+	public static rightTrim(s: string, charToRemove: string): string {
+		return s.replace(new RegExp(`${charToRemove}+$`, 'i'), '');
 	}
 }

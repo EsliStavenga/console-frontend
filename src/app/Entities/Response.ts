@@ -7,7 +7,7 @@ export class Response {
 	public title: string;
 	public responseLines: ResponseLine[] = [];
 
-	public constructor(data: any) {
+	public constructor(data: {title: string, responseLines?: any[] }) {
 		this.title = data.title;
 
 		if(!data.responseLines) {
@@ -21,8 +21,8 @@ export class Response {
 		});
 	}
 
-	public getColWidth(): number {
-		return StringService.getColWidth(this.title);
+	public getColWidth(multiplier: number = 1): number {
+		return StringService.getColWidth(this.title, multiplier);
 	}
 
 }

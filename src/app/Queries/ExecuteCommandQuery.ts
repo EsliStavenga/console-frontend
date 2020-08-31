@@ -11,8 +11,8 @@ import {IQuery} from './IQuery';
 export class ExecuteCommandQuery extends BaseQuery implements IQuery {
 
 	public query = gql`
-		query execute_command($command: String!) {
-			execute_command(command: $command) {
+		query executeCommand($command: String!) {
+			executeCommand(command: $command) {
 				title
 				responseLines {
 					parts {

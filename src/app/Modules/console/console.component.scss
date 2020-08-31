@@ -18,6 +18,20 @@
 }
 
 .input {
+	#error {
+		color: #b31919;
+		vertical-align: top;
+		padding-right: 5px;
+
+		&:not(.active) {
+			display: none;
+		}
+
+		&.active {
+			display: inline-block;
+		}
+	}
+
 	#user {
 		color: #C601FF;
 	}

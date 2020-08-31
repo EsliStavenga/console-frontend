@@ -6,8 +6,9 @@
 				<div class="col-12" *ngIf="response.responseLines" >
 					<div class="container-fluid parts">
 						<div class="row"*ngFor="let line of response.responseLines">
-							<div class="col-{{response.getColWidth()}}"></div>
-							<div class="col-{{part.getColWidth()}}" *ngFor="let part of line.parts" style="{{'color: #' + part.foregroundColor}}">{{part.content}}</div>
+							<div class="col-{{response.getColWidth()}} col-md-{{response.getColWidth(2)}}"></div>
+							<!-- help -->
+							<div class="col-md-{{part.getColWidth(2)}} col-sm-{{part.getColWidth(3)}} col-{{part.getColWidth(4)}}" *ngFor="let part of line.parts" style="{{'color: #' + part.foregroundColor}}">{{part.content}}</div>
 						</div>
 					</div>
 				</div>
@@ -18,7 +19,7 @@
 	</div>
 
 	<div class="input">
-
+		<span id="error" [class.active]="console.showErrorIcon">✘</span>
 		<span id="user">root</span>@eslistavenga:~#
 		<span id="preCursor">{{ console.preCursor }}</span>
 		<div #cursorElement class="cursor active">{{ console.cursor }}</div>

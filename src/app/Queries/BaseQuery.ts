@@ -21,7 +21,7 @@ export class BaseQuery {
 			throw new InvalidArgumentException('No query defined');
 		}
 
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			this.apollo
 				.watchQuery({
 					query: this.query,
@@ -34,11 +34,12 @@ export class BaseQuery {
 					let response;
 
 					if(commandData === null) {
-						response = this.generateError(variables);
+						reject(this.generateError(variables));
 					} else {
-						response = new Response(commandData);
+						resolve(new Response(commandData));
 					}
-					resolve(response);
+				}, () => {
+					reject(this.generateError(variables));
 				});
 		})
 

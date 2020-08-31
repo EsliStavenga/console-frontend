@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ClassListService} from '../../Services/class-list.service';
 import {HostListener} from '@angular/core';
 import {Console} from '../../Classes/console/console';
-import {ExecuteCommandQuery} from '../../Queries/ExecuteCommandQuery';
 
 @Component({
 	selector: 'app-console',
@@ -38,6 +37,14 @@ export class ConsoleComponent implements OnInit {
 	@HostListener('document:keydown', ['$event'])
 	handleKeyboardEvent(event: KeyboardEvent) {
 		switch (event.key) {
+			case 'ArrowUp':
+				this.console.goBackInHistoryByOne();
+				break;
+
+			case 'ArrowDown':
+				this.console.goForwardInHistoryByOne();
+				break;
+
 			case 'Backspace':
 				this.onBackspacePress();
 				break;
@@ -66,9 +73,12 @@ export class ConsoleComponent implements OnInit {
 				this.onEndPress();
 				break;
 
+			case 'F5':
+				return;
+
 			default:
 				this.onTextEntered(event.key);
-				//return instead of break so event.preventDefault will be fired
+				//return instead of break so event.preventDefault won't be fired
 				return;
 		}
 

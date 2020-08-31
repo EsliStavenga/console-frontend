@@ -7,7 +7,7 @@ import {NavbarComponent} from './Modules/navbar/navbar.component';
 import { ConsoleComponent } from './Modules/console/console.component';
 import { HttpClientModule } from '@angular/common/http';
 import { GraphQLModule } from './graphql.module';
-export let AppInjector: Injector;
+import {AppInjectorService} from './Services/app-injector.service';
 
 @NgModule({
 	declarations: [
@@ -26,8 +26,8 @@ export let AppInjector: Injector;
 })
 export class AppModule {
 
-	constructor(private injector: Injector) {
-		AppInjector = this.injector;
+	constructor(injector: Injector) {
+		AppInjectorService.setAppInjector(injector);
 	}
 
 }
