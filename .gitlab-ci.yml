@@ -23,7 +23,7 @@ testing:
         - npm install @angular/cli
         - npm install
     script:
-        - ng test --watch=false --code-coverage
+        - ng test --watch=false --code-coverage --browsers=ChromeHeadless
     coverage: '/Lines\W +: \d+\% \( \d+\/\d+ \).*/'
     artifacts:
         paths:
