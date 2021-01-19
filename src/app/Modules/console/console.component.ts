@@ -12,13 +12,15 @@ export class ConsoleComponent implements OnInit {
 
 	//TODO: 5 minutes AFK dvd bounce
 	//TODO random project
+	//TODO: tab
+	//TODO: clippy
 
 	public console: Console;
 
 	@ViewChild('cursorElement')
 	private cursorElement;
 
-	private readonly allowedCharacters = 'abcdefghijklmnopqrstuvwxyz0123456789 -="&\\\';'.split('');
+	private readonly allowedCharacters = 'abcdefghijklmnopqrstuvwxyz0123456789 -="^&\\\'~/;'.split('');
 
 	constructor() {
 		this.console = new Console(this.allowedCharacters);
@@ -35,14 +37,30 @@ export class ConsoleComponent implements OnInit {
 	}
 
 	@HostListener('document:keydown', ['$event'])
-	handleKeyboardEvent(event: KeyboardEvent) {
+	handleKeyboardEventKeyDown(event: KeyboardEvent) {
 		switch (event.key) {
 			case 'ArrowUp':
-				this.console.goBackInHistoryByOne();
+				this.onArrowUpPress();
+				break;
+
+			case 'Shift':
+				this.onShiftPress();
+				break;
+
+			case 'CapsLock':
+				this.onCapsPress();
+				break;
+
+			case 'Control':
+				this.onControlPress();
+				break;
+
+			case 'Tab':
+			case 'Alt':
 				break;
 
 			case 'ArrowDown':
-				this.console.goForwardInHistoryByOne();
+				this.onArrowDownPress();
 				break;
 
 			case 'Backspace':
@@ -77,13 +95,38 @@ export class ConsoleComponent implements OnInit {
 				return;
 
 			default:
+				//don't parse F11 and stuff
+				if(event.key.length > 1) {
+					return;
+				}
+
 				this.onTextEntered(event.key);
-				//return instead of break so event.preventDefault won't be fired
-				return;
+				break;
 		}
 
 		event.preventDefault();
 
+	}
+
+	@HostListener('document:keyup', ['$event'])
+	handleKeyboardEventKeyUp(event: KeyboardEvent) {
+		switch(event.key) {
+			case 'Shift':
+				this.onShiftRelease();
+				break;
+
+			case 'Control':
+				this.onControlRelease();
+				break;
+		}
+
+		event.preventDefault();
+	}
+
+	@HostListener('window:blur', ['$event'])
+	onBlur(event: any): void {
+		//when the user switches view, disable all key presses just in case
+		this.console.clearAllKeysPressed();
 	}
 
 	private onHomePress(): void {
@@ -118,4 +161,31 @@ export class ConsoleComponent implements OnInit {
 		this.console.execute();
 	}
 
+	private onArrowUpPress() {
+		this.console.goBackInHistoryByOne();
+	}
+
+	private onArrowDownPress() {
+		this.console.goForwardInHistoryByOne();
+	}
+
+	private onShiftPress() {
+		this.console.isShiftPressed = true;
+	}
+
+	private onShiftRelease() {
+		this.console.isShiftPressed = false;
+	}
+
+	private onCapsPress() {
+		this.console.toggleCapsLockPressed()
+	}
+
+	private onControlPress() {
+		this.console.isControlPressed = true;
+	}
+
+	private onControlRelease() {
+		this.console.isControlPressed = false;
+	}
 }

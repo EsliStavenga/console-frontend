@@ -435,21 +435,17 @@ describe('Console', () => {
 
 	});
 
-	// it('should return a Response object on proper response', async () => {
-	// 	//arrange
-	// 	const c = new Console('help'.split(''));
-	//
-	// 	//act
-	// 	c.addText('help');
-	//
-	// 	await c.execute();
-	// 	expect(c.responses.length).toEqual(1);
-	// 	console.log(c.responses);
-	// 	expect(c.showErrorIcon).toBeFalse();
-	// 	// expect(c.showErrorIcon).toEqual(res);
-	// 	expect(c.responses[0].title).toEqual('help');
-	// 	expect(c.responses[0]).toBeInstanceOf(Response);
-	//
-	// });
+	it('should capitalise characters when shift is pressed', () => {
+		//arrange
+		const c = new Console('abc'.split(''));
 
+		//act
+		c.addText('aaa');
+		c.toggleShiftPressed();
+		c.addText('bbb');
+		c.toggleShiftPressed();
+		c.addText('ccc');
+
+		expect(c.preCursor).toEqual('aaaBBBccc');
+	});
 });

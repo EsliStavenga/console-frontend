@@ -1,26 +1,39 @@
 <div>
 	<div class="terminal container-fluid">
 		<div class="response container-fluid">
-			<div class="row" *ngFor="let response of console.responses">
-				<div class="col-12">{{response.title}}</div>
-				<div class="col-12" *ngIf="response.responseLines" >
-					<div class="container-fluid parts">
-						<div class="row"*ngFor="let line of response.responseLines">
-							<div class="col-{{response.getColWidth()}} col-md-{{response.getColWidth(2)}}"></div>
-							<!-- help -->
-							<div class="col-md-{{part.getColWidth(2)}} col-sm-{{part.getColWidth(3)}} col-{{part.getColWidth(4)}}" *ngFor="let part of line.parts" style="{{'color: #' + part.foregroundColor}}">{{part.content}}</div>
-						</div>
+
+			<div class="row" *ngFor="let command of console.executedCommands">
+				<div class="col-12">
+					<div class="input">
+						<span class="error" [class.active]="command.hasFailed">✘</span>
+						<span class="user">root</span>@eslistavenga:~#
+						<div class="cursor">{{command.fullCommand}}</div>
 					</div>
 				</div>
+				<div class="col-12" *ngIf="command.response">
+					<div class="row">
+						<div class="col-12">{{command.response.title}}</div>
+						<div class="col-12" *ngIf="command.response.responseLines" >
+							<div class="container-fluid parts">
+								<div class="row"*ngFor="let line of command.response.responseLines">
+									<div class="col-{{!command.response.title ? 0 : command.response.getColWidth()}} col-md-{{!command.response.title ? 0 : command.response.getColWidth(2)}}"></div>
+									<!-- help -->
+									<div class="col-md-{{part.getColWidth(2)}} col-sm-{{part.getColWidth(3)}} col-{{part.getColWidth(4)}}" *ngFor="let part of line.parts" style="{{'color: #' + part.foregroundColor}}">{{part.content}}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
 			</div>
-		</div>
+
 
 		<div class="loading" [class.active]="console.loadingText.length > 0">Loading {{console.loadingText}}</div>
 	</div>
 
 	<div class="input">
-		<span id="error" [class.active]="console.showErrorIcon">✘</span>
-		<span id="user">root</span>@eslistavenga:~#
+		<span class="error" [class.active]="console.showErrorIcon">✘</span>
+		<span class="user">{{console.user}}</span>@eslistavenga:<span id="path">{{console.path}}</span>#
 		<span id="preCursor">{{ console.preCursor }}</span>
 		<div #cursorElement class="cursor active">{{ console.cursor }}</div>
 		<span id="postCursor">{{ console.postCursor }}</span>

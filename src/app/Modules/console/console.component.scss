@@ -17,8 +17,20 @@
 	}
 }
 
+.col-0 {
+	width: 0;
+}
+
+.container-fluid {
+	padding-left: 0;
+}
+
+.padding-left {
+	padding-left: 45px;
+}
+
 .input {
-	#error {
+	.error {
 		color: #b31919;
 		vertical-align: top;
 		padding-right: 5px;
@@ -32,7 +44,7 @@
 		}
 	}
 
-	#user {
+	.user {
 		color: #C601FF;
 	}
 

@@ -38,7 +38,7 @@ describe('ConsoleComponent', () => {
 		const spy = spyOn(keyEvent, 'preventDefault');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
@@ -51,7 +51,7 @@ describe('ConsoleComponent', () => {
 		const spy = spyOn(keyEvent, 'preventDefault');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
@@ -65,7 +65,7 @@ describe('ConsoleComponent', () => {
 		const consoleSpy = spyOn(component.console, 'delete');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
@@ -80,7 +80,7 @@ describe('ConsoleComponent', () => {
 		const consoleSpy = spyOn(component.console, 'goBackInHistoryByOne');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
@@ -95,7 +95,7 @@ describe('ConsoleComponent', () => {
 		const consoleSpy = spyOn(component.console, 'goForwardInHistoryByOne');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
@@ -110,7 +110,7 @@ describe('ConsoleComponent', () => {
 		const consoleSpy = spyOn(component.console, 'moveCursorLeft');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
@@ -125,7 +125,7 @@ describe('ConsoleComponent', () => {
 		const consoleSpy = spyOn(component.console, 'moveCursorRight');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
@@ -140,7 +140,7 @@ describe('ConsoleComponent', () => {
 		const consoleSpy = spyOn(component.console, 'execute');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
@@ -155,7 +155,7 @@ describe('ConsoleComponent', () => {
 		const consoleSpy = spyOn(component.console, 'home');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
@@ -170,12 +170,52 @@ describe('ConsoleComponent', () => {
 		const consoleSpy = spyOn(component.console, 'end');
 
 		//act
-		component.handleKeyboardEvent(keyEvent);
+		component.handleKeyboardEventKeyDown(keyEvent);
 		fixture.detectChanges();
 
 		//assert
 		expect(consoleSpy).toHaveBeenCalledTimes(1);
 		expect(keyboardSpy).toHaveBeenCalledTimes(1);
 	});
+
+	it('Should capitalise characters if shift is pressed', () => {
+		//arrange
+		const keyEvent = new KeyboardEvent('keydown', { key: 'Shift' });
+		const keyboardSpy = spyOn(keyEvent, 'preventDefault');
+
+		//act
+		component.handleKeyboardEventKeyDown(keyEvent);
+		fixture.detectChanges();
+
+		//assert
+		expect(keyboardSpy).toHaveBeenCalledTimes(1);
+	});
+
+	it('Should capitalise characters if caps is pressed', () => {
+		//arrange
+		const keyEvent = new KeyboardEvent('keydown', { key: 'CapsLock' });
+		const keyboardSpy = spyOn(keyEvent, 'preventDefault');
+
+		//act
+		component.handleKeyboardEventKeyDown(keyEvent);
+		fixture.detectChanges();
+
+		//assert
+		expect(keyboardSpy).toHaveBeenCalledTimes(1);
+	});
+
+	it('Should capitalise characters if shift is released', () => {
+		//arrange
+		const keyEvent = new KeyboardEvent('keyup', { key: 'Shift' });
+		const keyboardSpy = spyOn(keyEvent, 'preventDefault');
+
+		//act
+		component.handleKeyboardEventKeyUp(keyEvent);
+		fixture.detectChanges();
+
+		//assert
+		expect(keyboardSpy).toHaveBeenCalledTimes(1);
+	});
+
 
 });

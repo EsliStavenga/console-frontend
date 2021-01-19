@@ -4,28 +4,46 @@ import {ExecuteCommandQuery} from '../../Queries/ExecuteCommandQuery';
 import {Response} from '../../Entities/Response';
 import {AppInjectorService} from '../../Services/app-injector.service';
 import Timeout = NodeJS.Timeout;
+import {Keys} from './Keys';
+import {Command} from '../../Entities/Command';
+import {ICommand} from '../../Entities/ICommand';
+import * as commands from '../../Entities/Commands';
+import {ChangeDirectoryCommand} from '../../Entities/Commands/ChangeDirectoryCommand';
+
+class FailedCommand extends Command implements ICommand{
+	command: string = '';
+	help: string = '';
+
+	execute(): Command {
+		return undefined;
+	}
+}
 
 export class Console {
 
-	public responses: Response[] = [];
+	public executedCommands: ICommand[] = [];
 	public loadingText: string = '';
 	public showErrorIcon: boolean = false;
+	public path: string = '~';
+	public user: string = 'root';
 
 	private loadingTextTimer: Timeout = null;
 	private executeCommandQuery: ExecuteCommandQuery
 
 	private readonly WHITESPACE = '\u00A0';
 	private readonly characterWhitelist: string[];
-
 	private _preCursor = ''; //before the white flashy bit
 	private _cursor = this.WHITESPACE; //The text underneath the user's cursor
 	private _postCursor = ''; //after the white flashy bit
+	private keysPressed = Keys.NONE;
 	private history: string[] = [];
 	private currentHistoryItem = 0;
+	private readonly availableCommands: ICommand[] = [];
 
 	constructor(
 		allowedCharacters: string[] = []
 	) {
+		this.availableCommands = this.getAvailableCommands();
 		this.characterWhitelist = allowedCharacters;
 		this.executeCommandQuery = AppInjectorService.AppInjector.get(ExecuteCommandQuery);
 		this.clear();
@@ -85,11 +103,16 @@ export class Console {
 			throw new InvalidArgumentException(`Expected exactly 1 character, ${s.length} specified`);
 		}
 
-		if (!this.characterWhitelist.includes(s)) {
+		if (!this.characterWhitelist.includes(s.toLowerCase())) {
 			throw new InvalidArgumentException(`Character '${s}' is not in allowed characters list`);
 		}
 
-		this._preCursor += StringService.globalStringReplace(' ', this.WHITESPACE, s);
+		if(this.isKeyPressed(Keys.CONTROL)) {
+			this.handleSpecialKeyPress(s);
+			return;
+		}
+
+		this.addToPrecursor(s);
 	}
 
 	/**
@@ -200,33 +223,105 @@ export class Console {
 	public execute(): Promise<boolean> {
 
 		return new Promise(resolve => {
-			const command = (this.preCursor + this.cursor + this.postCursor).trim();
+			const fullCommand = this.getCommand();
 
-			if(!command) {
+			if(!fullCommand) {
 				return;
 			}
 
-			this.history.push(command);
+			this.history.push(fullCommand);
 
 			this.clear();
 			this.startLoadingText();
 
-			this.executeCommandQuery.execute(command)
-				.then((response) => {
-					this.showErrorIcon = false;
-					this.handleResponseData(response);
-				})
-				.catch((errorResponse) => {
-					this.showErrorIcon = true;
-					this.handleResponseData(errorResponse);
-				})
-				.finally(() => {
-					resolve(this.showErrorIcon);
+
+			const c = new FailedCommand();
+			c.fullCommand = fullCommand;
+			c.path = this.path;
+
+			const command = fullCommand.split(' ')[0];
+			console.log(command);
+
+			const commandToExecute = this.availableCommands.filter(x => x.command === command);
+
+			if(commandToExecute.length !== 1) {
+				this.showErrorIcon = false;
+				c.hasFailed = false;
+				c.response = new Response({
+					'title': command,
+					'responseLines': [
+						{
+
+							'parts': [{
+								'content': `Error: The command '${command}' was not found`,
+								'foregroundColor': '8a2828'
+							}]
+						}
+					]
 				});
+			}
+
+			this.handleResponseData(c);
+
+			// const c = new Command();
+			// c.command = command;
+			// c.path = this.path;
+			//
+			// this.executeCommandQuery.execute(command)
+			// 	.then((response) => {
+			// 		this.showErrorIcon = false;
+			// 		c.hasFailed = false;
+			// 		c.response = response;
+			//
+			// 		this.handleResponseData(c);
+			// 	})
+			// 	.catch((errorResponse) => {
+			// 		this.showErrorIcon = true;
+			// 		c.hasFailed = true;
+			// 		c.response = errorResponse;
+			//
+			// 		this.handleResponseData(c);
+			// 	})
+			// 	.finally(() => {
+			// 		resolve(this.showErrorIcon);
+			// 	});
 		})
+	}
 
+	public get isShiftPressed(): boolean {
+		return this.isKeyPressed(Keys.SHIFT);
+	}
 
+	public get isControlPressed(): boolean {
+		return this.isKeyPressed(Keys.CONTROL);
+	}
 
+	public set isControlPressed(value: boolean) {
+		this.setKeyPressed(Keys.CONTROL, value);
+	}
+
+	public set isShiftPressed(value: boolean) {
+		this.setKeyPressed(Keys.SHIFT, value);
+	}
+
+	public toggleShiftPressed(): boolean {
+		return this.toggleKeyPress(Keys.SHIFT);
+	}
+
+	public get isCapsLockPressed(): boolean {
+		return this.isKeyPressed(Keys.CAPS);
+	}
+
+	public toggleCapsLockPressed(): boolean {
+		return this.toggleKeyPress(Keys.CAPS);
+	}
+
+	public clearAllKeysPressed() {
+		this.keysPressed = Keys.NONE;
+	}
+
+	private shouldCapitalise(): boolean {
+		return this.isCapsLockPressed != this.isShiftPressed && (this.isShiftPressed || this.isCapsLockPressed);
 	}
 
 	private clearCursor() {
@@ -256,8 +351,88 @@ export class Console {
 		}, 1000);
 	}
 
-	private handleResponseData(response: Response) {
-		this.responses.push(response);
+	private handleResponseData(command: ICommand) {
+		this.executedCommands.push(command);
 		this.clearLoadingText();
+	}
+
+	private isKeyPressed(key: Keys) {
+		return (this.keysPressed & key) === key;
+	}
+
+	private toggleKeyPress(key: Keys): boolean {
+		return this.setKeyPressed(key, (!this.isKeyPressed(key)));
+	}
+
+	private setKeyPressed(key: Keys, isPressed: boolean): boolean {
+		if(isPressed) {
+			this.addKeyPressed(key);
+		} else {
+			this.removeKeyPressed(key);
+		}
+
+		return this.isKeyPressed(key);
+	}
+
+	private addKeyPressed(key: Keys): void {
+		this.keysPressed |= key;
+	}
+
+	private removeKeyPressed(key: Keys): void {
+		this.keysPressed &= ~key;
+	}
+
+	private handleSpecialKeyPress(s: string): void {
+		if (!this.isKeyPressed(Keys.CONTROL) || this.isShiftPressed) {
+			return;
+		}
+
+		const shiftIsPressed = this.isKeyPressed(Keys.SHIFT);
+
+		this.addKeyPressed(Keys.SHIFT);
+		this.addToPrecursor(`^${s}`);
+		this.removeKeyPressed(Keys.SHIFT);
+
+		if(s.toLowerCase() === 'c') {
+			this.cancelCurrentInput();
+		}
+	}
+
+	private cancelCurrentInput(): void {
+		// const response = new Response({
+		// 	title: '',
+		// 	responseLines: [{
+		// 		parts: [{
+		// 			foregroundColor: '7e1313',
+		// 			content: `✘ root@eslistavenga:~# ${this.getCommand()}`
+		// 		}]
+		// 	}]
+		// });
+
+		const c = new FailedCommand();
+		c.command = this.getCommand();
+		c.path = this.path;
+
+		this.executedCommands.push(c);
+		this.clear();
+	}
+
+	private addToPrecursor(s: string): void {
+		if(this.shouldCapitalise()) {
+			s = s.toUpperCase();
+		} else {
+			s = s.toLowerCase();
+		}
+
+		this._preCursor += StringService.globalStringReplace(' ', this.WHITESPACE, s);
+	}
+
+	private getCommand(): string {
+		return (this.preCursor + this.cursor + this.postCursor).trim();
+	}
+
+	private getAvailableCommands(): ICommand[] {
+		return ICommand.GetImplementations().map(x => new x());
+
 	}
 }
